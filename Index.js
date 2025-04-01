@@ -12,7 +12,6 @@ program.name("CLI-Todo-App")
 program.version("1.0.0")
 program.description("This is a CLI Todo App")
 
-// Add Todo Item Command
 program
   .command("add-Todoitem")
   .description("Add a new todo item")
@@ -44,13 +43,12 @@ program
 
       const newTodoitem = await client.todoTask.create({
         data: {
-          id: nanoid(6), // Ensure uniqueness or use Prisma’s UUID
+          id: nanoid(6),
           title: response.title || "Todoitem",
           description: response.description || "This is a new Todoitem",
-          status: response.status || "pending", // Ensure this field is provided
+          status: response.status || "todo", 
         },
       });
-      
       
       console.log(chalk.green("Todoitem created successfully!"));
       console.log(newTodoitem);
@@ -59,7 +57,7 @@ program
     }
   });
 
-// Update Todo Item Command
+
 program
   .command("update-Todoitem")
   .description("Update an existing todo item")
@@ -80,7 +78,7 @@ program
         Object.entries(updateData).filter(([_, v]) => v !== undefined)
       );
       
-      const updatedTodoitem = await client.todotask.update({
+      const updatedTodoitem = await client.todoTask.update({
         where: {
           id: id,
         },
@@ -94,7 +92,7 @@ program
     }
   });
 
-// Read All Todo Items Command
+
 program
   .command("read-all-Todoitem")
   .description("List all todo items")
@@ -106,7 +104,7 @@ program
       if (options.status) where.status = options.status;
       if (options.id) where.id = options.id;
       
-      const todoItems = await client.todotask.findMany({ where });
+      const todoItems = await client.todoTask.findMany({ where });
       
       if (todoItems.length === 0) {
         console.log(chalk.yellow("No todo items found."));
@@ -135,7 +133,7 @@ program
     }
   });
 
-// Delete Specific Todo Item Command
+
 program
   .command("delete-Todoitem-by-id")
   .description("Delete a specific todo item by ID")
@@ -143,7 +141,7 @@ program
   .action(async (options) => {
     try {
       // First check if the item exists
-      const foundTodoitem = await client.todotask.findUnique({
+      const foundTodoitem = await client.todoTask.findUnique({
         where: { id: options.id },
       });
       
@@ -152,7 +150,7 @@ program
         return;
       }
       
-      await client.todotask.delete({
+      await client.todoTask.delete({
         where: { id: options.id },
       });
       
@@ -162,7 +160,7 @@ program
     }
   });
 
-// Delete All Todo Items Command
+
 program
   .command("delete-all-Todoitem")
   .description("Delete all todo items")
@@ -182,7 +180,7 @@ program
       });
       
       if (confirmation.value) {
-        const result = await client.todotask.deleteMany({ where });
+        const result = await client.todoTask.deleteMany({ where });
         console.log(chalk.red(`${result.count} Todoitem(s) deleted successfully!`));
       } else {
         console.log(chalk.yellow("Operation cancelled."));
@@ -192,7 +190,7 @@ program
     }
   });
 
-// Help Command
+
 program
   .command("help")
   .description("Show help information")

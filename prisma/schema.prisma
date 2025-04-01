@@ -13,15 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Todotask {
-  id String @id 
-  title String 
+model TodoTask {
+  id          String @id @default(nanoid(6))
+  title       String
   description String
-  status String
+  status      String
   
-
-  @@map("Todotask@table")
-}
+  @@map("todo_tasks") 
+  }
 
 
 
